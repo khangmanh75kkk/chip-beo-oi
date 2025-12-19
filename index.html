@@ -324,7 +324,7 @@
             lCtx.shadowColor = "#FF1493"; lCtx.shadowBlur = 40; 
             lCtx.fillText("YEU CHIP BEO", 512, 130);
             const loveTex = new THREE.CanvasTexture(loveCanvas);
-            const loveMat = new THREE.MeshBasicMaterial({ mâp: loveTex, transparent: true, blending: THREE.AdditiveBlending });
+            const loveMat = new THREE.MeshBasicMaterial({ map: loveTex, transparent: true, blending: THREE.AdditiveBlending });
             loveMesh = new THREE.Mesh(new THREE.PlaneGeometry(70, 18), loveMat);
             loveMesh.position.set(0, 0, 20);
             loveMesh.visible = false;
