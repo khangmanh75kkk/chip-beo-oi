@@ -72,15 +72,7 @@
     background: black;
   }
 
-  #webcam {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    object-fit: cover; /* cam phủ full */
-    z-index: 1;
-  }
+
     </style>
     <style>
     html, body {
@@ -92,20 +84,12 @@
         background: black;
     }
 
-    #webcam {
-        position: fixed;
-        inset: 0;
-        width: 100vw;
-        height: 100vh;
-        object-fit: cover; /* QUAN TRỌNG: full mà không méo */
-        z-index: 9999;     /* nổi lên trên */
-    }
+
     </style>
 
 </head>
 <body>
-    <video id="webcam" autoplay playsinline muted></video>
-
+ 
 
 
     <div id="error-log"></div>
