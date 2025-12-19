@@ -60,10 +60,11 @@
             }
 
             #camera-preview{
-            width: 100%;
-            height: 100%;
+            width: 120px;
+            height: 90px;
             display: block;
             }
+
 
 
         
@@ -526,9 +527,11 @@
             ctx.drawImage(results.image, 0, 0, canvas.clientWidth, canvas.clientHeight);
 
             // Nếu không có tay -> về TREE
-            if (!results.multiHandLandmarks || results.multiHandLandmarks.length === 0) {
-                state = 'TREE';
-                return;
+           if (results.multiHandLandmarks) {
+            for (const landmarks of results.multiHandLandmarks) {
+                drawConnectors(ctx, landmarks, HAND_CONNECTIONS, { lineWidth: 1 });
+                drawLandmarks(ctx, landmarks, { radius: 1 });
+            }
             }
 
             // Vẽ "xương" bàn tay
