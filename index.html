@@ -41,12 +41,18 @@
 
         /* Camera Preview Vandiep */
         #camera-preview {
-            position: absolute; top: 15px; right: 15px;
-            width: 120px; height: 90px;
-            border: 2px solid rgba(255,0,0,0.5); 
-            transform: scaleX(-1); opacity: 0.6; border-radius: 8px;
-        }
-        
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  width: 120px;
+  height: 90px;
+  border: 2px solid rgba(255,0,0,0.5);
+  border-radius: 8px;
+  opacity: 0.6;
+  transform: scaleX(-1);
+  z-index: 10;
+}
+
         /* Vandiep */
         #copyright {
             position: absolute;
@@ -81,7 +87,7 @@
     <div id="canvas-container"></div>
     <video class="input_video" style="display:none"></video>
     <canvas id="camera-preview"></canvas>
-
+    
     <script>
         // ==========================================
         // 1. RESOURCES CONFIG Vandiep
