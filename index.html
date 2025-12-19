@@ -40,18 +40,27 @@
         @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
 
         /* Camera Preview Vandiep */
-            #camera-preview {
-        position: absolute;
-        top: 15px;
-        right: 15px;
-        width: 120px;
-        height: 90px;
-        border: 2px solid rgba(255,0,0,0.5);
-        border-radius: 8px;
-        opacity: 0.6;
-        transform: scaleX(-1);
-        z-index: 10;
-        }
+            #camera-box{
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 120px;
+            height: 90px;
+            border: 2px solid rgba(255,0,0,0.5);
+            border-radius: 8px;
+            overflow: hidden;
+            opacity: 0.6;
+            z-index: 10;
+            background: #000;
+            transform: scaleX(-1);
+            }
+
+            #camera-preview{
+            width: 100%;
+            height: 100%;
+            display: block;
+            }
+
 
         
         /* Vandiep */
@@ -87,7 +96,10 @@
 
     <div id="canvas-container"></div>
     <video class="input_video" style="display:none"></video>
-    <canvas id="camera-preview"></canvas>
+    <div id="camera-box">
+     <canvas id="camera-preview"></canvas>
+        </div>
+
 
     <script>
         // ==========================================
@@ -488,22 +500,26 @@
             const video = document.getElementsByClassName('input_video')[0];
             const canvas = document.getElementById('camera-preview');
             const ctx = canvas.getContext('2d');
-            canvas.width = 120;
-            canvas.height = 90;
+            function resizePreviewCanvas(){
+                const dpr = window.devicePixelRatio || 1;
+                const w = canvas.clientWidth;
+                const h = canvas.clientHeight;
+                canvas.width  = Math.round(w * dpr);
+                canvas.height = Math.round(h * dpr);
+                ctx.setTransform(dpr, 0, 0, dpr, 0, 0); // vẽ theo px CSS
+                }
+                resizePreviewCanvas();
+                window.addEventListener('resize', resizePreviewCanvas);
+
 
             
             const hands = new Hands({locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`});
             hands.setOptions({ maxNumHands: 2, modelComplexity: 1, minDetectionConfidence: 0.5, minTrackingConfidence: 0.5 });
 
             hands.onResults(results => {
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                ctx.drawImage(
-                results.image,
-                0,
-                0,
-                canvas.width,
-                canvas.height
-                );
+               ctx.clearRect(0, 0, canvas.clientWidth, canvas.clientHeight);
+                ctx.drawImage(results.image, 0, 0, canvas.clientWidth, canvas.clientHeight);
+
 
 
                 // --- Hand Logic  ---
