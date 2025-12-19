@@ -520,48 +520,78 @@
             const hands = new Hands({locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`});
             hands.setOptions({ maxNumHands: 2, modelComplexity: 1, minDetectionConfidence: 0.5, minTrackingConfidence: 0.5 });
 
-            hands.onResults(results => {
-               ctx.clearRect(0, 0, canvas.clientWidth, canvas.clientHeight);
-                ctx.drawImage(results.image, 0, 0, canvas.clientWidth, canvas.clientHeight);
+           hands.onResults((results) => {
+            // Vẽ camera preview vào khung đỏ
+            ctx.clearRect(0, 0, canvas.clientWidth, canvas.clientHeight);
+            ctx.drawImage(results.image, 0, 0, canvas.clientWidth, canvas.clientHeight);
 
-              if (results.multiHandLandmarks) {
-            for (const landmarks of results.multiHandLandmarks) {
-            drawConnectors(ctx, landmarks, HAND_CONNECTIONS, { lineWidth: 2 });
-            drawLandmarks(ctx, landmarks, { radius: 2 });
+            // Nếu không có tay -> về TREE
+            if (!results.multiHandLandmarks || results.multiHandLandmarks.length === 0) {
+                state = 'TREE';
+                return;
             }
 
-                // --- Hand Logic  ---
-                if (results.multiHandLandmarks.length === 2) {
-                    const h1 = results.multiHandLandmarks[0]; const h2 = results.multiHandLandmarks[1];
-                    const distIndex = Math.hypot(h1[8].x - h2[8].x, h1[8].y - h2[8].y);
-                    const distThumb = Math.hypot(h1[4].x - h2[4].x, h1[4].y - h2[4].y);
-                    if (distIndex < 0.15 && distThumb < 0.15) {
-                        state = 'HEART'; return;
-                    }
-                }
+            // Vẽ "xương" bàn tay
+            for (const landmarks of results.multiHandLandmarks) {
+                drawConnectors(ctx, landmarks, HAND_CONNECTIONS, { lineWidth: 2 });
+                drawLandmarks(ctx, landmarks, { radius: 2 });
+            }
 
-                if(results.multiHandLandmarks.length > 0) {
-                    const lm = results.multiHandLandmarks[0];
-                    handX = lm[9].x; 
-                    const tips = [8,12,16,20]; const wrist = lm[0];
-                    let openDist = 0; tips.forEach(i => openDist += Math.hypot(lm[i].x-wrist.x, lm[i].y-wrist.y));
-                    const avgDist = openDist / 4;
-                    const pinchDist = Math.hypot(lm[4].x-lm[8].x, lm[4].y-lm[8].y);
-
-                    if (avgDist < 0.25) { 
-                        state = 'TREE'; 
-                    } else if (pinchDist < 0.05) {
-                        state = 'PHOTO'; 
-                    } else {
-                        state = 'EXPLODE'; 
-                    }
-                } else {
-                    state = 'TREE'; 
+            // --- Gesture logic ---
+            // 2 tay chụm -> HEART
+            if (results.multiHandLandmarks.length === 2) {
+                const h1 = results.multiHandLandmarks[0];
+                const h2 = results.multiHandLandmarks[1];
+                const distIndex = Math.hypot(h1[8].x - h2[8].x, h1[8].y - h2[8].y);
+                const distThumb = Math.hypot(h1[4].x - h2[4].x, h1[4].y - h2[4].y);
+                if (distIndex < 0.15 && distThumb < 0.15) {
+                state = 'HEART';
+                return;
                 }
+            }
+
+            // --- 1 tay: điều khiển xoay (handX) + trạng thái ---
+            const lm = results.multiHandLandmarks[0];
+
+            // Lấy X của ngón trỏ (8) hoặc khớp giữa (9). Ngón trỏ dễ “lướt” hơn:
+            let x = lm[8].x; // 0..1 theo khung camera
+
+            // Vì preview đang scaleX(-1) (m bị lật gương ở CSS), nên đảo x cho đúng chiều điều khiển:
+            x = 1 - x;
+
+            // ✅ GAIN để lướt ăn đủ 5 vùng mà không phải đưa tay ra rìa camera
+            const gainX = 1.9;          // thử 1.6 -> 2.2 tùy độ “nhạy” m muốn
+            x = (x - 0.5) * gainX + 0.5;
+
+            // Clamp về 0..1
+            x = Math.max(0, Math.min(1, x));
+
+            // Gán cho hệ thống xoay (m đang dùng handX để xoay explode)
+            handX = x;
+
+            // Tính các gesture khác giữ nguyên của m
+            const tips = [8, 12, 16, 20];
+            const wrist = lm[0];
+            let openDist = 0;
+            tips.forEach(i => openDist += Math.hypot(lm[i].x - wrist.x, lm[i].y - wrist.y));
+            const avgDist = openDist / 4;
+            const pinchDist = Math.hypot(lm[4].x - lm[8].x, lm[4].y - lm[8].y);
+
+            if (avgDist < 0.25) {
+                state = 'TREE';
+            } else if (pinchDist < 0.05) {
+                state = 'PHOTO';
+            } else {
+                state = 'EXPLODE';
+            }
             });
 
             const cameraUtils = new Camera(video, {
-                onFrame: async () => { await hands.send({image: video}); }, width: 320, height: 240
+            onFrame: async () => {
+                await hands.send({ image: video });
+            },
+            width: 640,
+            height: 480
             });
             cameraUtils.start();
         }
