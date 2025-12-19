@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Magic Christmas - Final Clean</title>
+    <title>Magic Christmas - White Tree</title>
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
@@ -13,9 +13,8 @@
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
 
-
     <style>
-        body { margin: 0; overflow: hidden; background-color: #000000; font-family: 'Segoe UI', sans-serif; }
+        body { margin: 0; overflow: hidden; background-color: #d5eaff; font-family: 'Segoe UI', sans-serif; }
         #canvas-container { width: 100%; height: 100vh; display: block; }
         
         /* UI Center Vandiep */
@@ -29,44 +28,49 @@
             color: rgba(255, 255, 255, 0.6); 
             font-size: 13px; 
             margin-bottom: 20px; 
-            text-shadow: 0 2px 4px black;
+            text-shadow: 0 2px 4px rgb(208, 228, 240);
         }
 
         button {
             pointer-events: auto; cursor: pointer;
-            background: linear-gradient(to bottom, #D32F2F, #8B0000); 
-            color: #FFF; border: 2px solid #FFD700;
+            background: linear-gradient(to bottom, #99FFFF #add4fc); 
+            color: #6699CC; border: 2px solid #40a2f1;
             padding: 15px 50px; border-radius: 30px; 
             font-weight: 800; font-size: 16px;
-            box-shadow: 0 0 30px rgba(255, 0, 0, 0.6);
+            box-shadow: 0 0 30px rgba(45, 109, 227, 0.6);
             animation: pulse 1.5s infinite;
         }
         @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
 
         /* Camera Preview Vandiep */
-            #camera-box{
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            width: 120px;
-            height: 90px;
-            border: 2px solid rgba(255,0,0,0.5);
-            border-radius: 8px;
-            overflow: hidden;
-            opacity: 0.6;
-            z-index: 10;
-            background: #000;
-            transform: scaleX(-1);
-            }
+        /* Camera Preview Vandiep - BĂNG GIÁ */
+#camera-box{
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    width: 120px;
+    height: 90px;
+    border: 2px solid rgba(200, 240, 255, 0.9); /* Xanh băng nhạt */
+    border-radius: 12px;
+    overflow: hidden;
+    opacity: 0.85;
+    z-index: 10;
+    background: rgba(0, 30, 60, 0.5);
+    transform: scaleX(-1);
+    box-shadow: 
+        0 0 8px rgba(100, 220, 255, 0.7),
+        0 0 15px rgba(100, 220, 255, 0.4),
+        inset 0 0 15px rgba(100, 220, 255, 0.2);
+    /* Viền đứt đoạn như băng */
+    border-style: solid;
+    border-width: 2px;
+}
 
-            #camera-preview{
-            width: 100%;
-            height: 100%;
-            display: block;
-            }
-
-
-        
+#camera-preview{
+    width: 100%;
+    height: 100%;
+    display: block;
+}
         /* Vandiep */
         #copyright {
             position: absolute;
@@ -80,7 +84,7 @@
             font-style: italic;
         }
 
-        #error-log { display: none; position: absolute; top: 0; left: 0; color: red; background: rgba(0,0,0,0.8); z-index: 999; padding: 10px; }
+        #error-log { display: none; position: absolute; top: 0; left: 0; color: red; background: rgba(210, 234, 255, 0.8); z-index: 999; padding: 10px; }
     </style>
 </head>
 <body>
@@ -92,18 +96,17 @@
         <div class="guide">
        
         </div>
-        <button id="btnStart" onclick="startSystem()">chip nhan vao di</button>
+        <button id="btnStart" onclick="startSystem()">chip click vào i</button>
     </div>
 
     <!-- Vandiep -->
-    <div id="copyright">© by vandiep</div>
+    <div id="copyright">mkhang cua chip beo iu</div>
 
     <div id="canvas-container"></div>
     <video class="input_video" style="display:none"></video>
     <div id="camera-box">
      <canvas id="camera-preview"></canvas>
-        </div>
-
+    </div>
 
     <script>
         // ==========================================
@@ -125,24 +128,26 @@
             const cx = 64, cy = 64;
 
             if (type === 'gold_glow') {
+                // WHITE GLOW texture
                 const grd = ctx.createRadialGradient(cx, cy, 0, cx, cy, 40);
                 grd.addColorStop(0, '#FFFFFF'); 
-                grd.addColorStop(0.2, '#FFFFE0'); 
-                grd.addColorStop(0.5, '#FFD700');
-                grd.addColorStop(1, 'rgba(0,0,0,0)');
+                grd.addColorStop(0.2, '#F8F8F8'); 
+                grd.addColorStop(0.5, '#E8E8E8');
+                grd.addColorStop(1, 'rgba(255,255,255,0)');
                 ctx.fillStyle = grd; ctx.fillRect(0,0,128,128);
 
             } else if (type === 'red_light') {
+                // WHITE LIGHT texture
                 const grd = ctx.createRadialGradient(cx, cy, 0, cx, cy, 50);
-                grd.addColorStop(0, '#FFAAAA'); 
-                grd.addColorStop(0.3, '#FF0000'); 
-                grd.addColorStop(1, 'rgba(0,0,0,0)');
+                grd.addColorStop(0, '#FFFFFF'); 
+                grd.addColorStop(0.3, '#F0F0F0'); 
+                grd.addColorStop(1, 'rgba(255,255,255,0)');
                 ctx.fillStyle = grd; ctx.fillRect(0,0,128,128);
 
-            } else if (type === 'gift_red') {
-                ctx.fillStyle = '#D32F2F'; ctx.fillRect(20, 20, 88, 88);
-                ctx.fillStyle = '#FFD700'; ctx.fillRect(54, 20, 20, 88); ctx.fillRect(20, 54, 88, 20);
-                ctx.strokeStyle = "rgba(0,0,0,0.3)"; ctx.lineWidth=2; ctx.strokeRect(20,20,88,88);
+            } else if (type === 'gift_white') {
+                ctx.fillStyle = '#EEEEEE'; ctx.fillRect(20, 20, 88, 88);
+                ctx.fillStyle = '#66CCFF'; ctx.fillRect(54, 20, 20, 88); ctx.fillRect(20, 54, 88, 20);
+                ctx.strokeStyle = "#EEEEEE"; ctx.lineWidth=2; ctx.strokeRect(20,20,88,88);
             }
             return new THREE.CanvasTexture(canvas);
         }
@@ -150,7 +155,7 @@
         const textures = {
             gold: createCustomTexture('gold_glow'),
             red: createCustomTexture('red_light'),
-            gift: createCustomTexture('gift_red')
+            gift: createCustomTexture('gift_white')
         };
 
         // ==========================================
@@ -181,7 +186,7 @@
         function init3D() {
             const container = document.getElementById('canvas-container');
             scene = new THREE.Scene();
-            scene.fog = new THREE.FogExp2(0x000000, 0.002);
+            scene.fog = new THREE.FogExp2(0xCCFFFF, 0.002);
 
             camera = new THREE.PerspectiveCamera(60, window.innerWidth/window.innerHeight, 0.1, 1000);
             camera.position.z = 100;
@@ -254,12 +259,12 @@
             geo.setAttribute('position', new THREE.Float32BufferAttribute(pPositions, 3));
             geo.setAttribute('size', new THREE.Float32BufferAttribute(sizes, 1));
             
-            // Init colors Vandiep
+            // Init colors Vandiep - ĐÃ SỬA THÀNH MÀU TRẮNG
             const colors = new Float32Array(count * 3);
             const baseColor = new THREE.Color();
-            if(type === 'gold') baseColor.setHex(0xFFD700);
-            else if(type === 'red') baseColor.setHex(0xFF0000);
-            else baseColor.setHex(0xFFFFFF);
+            if(type === 'gold') baseColor.setHex(0xFFFFFF); // VÀNG -> TRẮNG
+            else if(type === 'red') baseColor.setHex(0xFFFFFF); // ĐỎ -> TRẮNG
+            else baseColor.setHex(0xFFFFFF); // gift vẫn trắng
 
             for(let i=0; i<count; i++) {
                 colors[i*3] = baseColor.r;
@@ -291,7 +296,7 @@
         function createPhotos() {
             const geo = new THREE.PlaneGeometry(8, 8);
             const borderGeo = new THREE.PlaneGeometry(9, 9); 
-            const borderMat = new THREE.MeshBasicMaterial({ color: 0xFFD700 }); 
+            const borderMat = new THREE.MeshBasicMaterial({ color: 0xCCFFFF }); 
 
             for(let i=0; i<5; i++) {
                 const mat = new THREE.MeshBasicMaterial({ map: photoTextures[i], side: THREE.DoubleSide });
@@ -306,16 +311,39 @@
         }
 
         function createDecorations() {
-            // MERRY CHRISTMAS Vandiep
+                // MERRY CHRISTMAS Vandiep - XANH BĂNG LẤP LÁNH
             const canvas = document.createElement('canvas');
             canvas.width = 1024; canvas.height = 256;
             const ctx = canvas.getContext('2d');
             ctx.font = 'bold italic 90px "Times New Roman"';
-            ctx.fillStyle = '#FFD700'; ctx.textAlign = 'center';
-            ctx.shadowColor = "#FF0000"; ctx.shadowBlur = 40; 
+            ctx.textAlign = 'center';
+            
+            // Vẽ nhiều lớp để tạo hiệu ứng phát sáng
+            // Lớp 1: Bóng ngoài xanh sáng
+            ctx.shadowColor = "#00E5FF";
+            ctx.shadowBlur = 50;
+            ctx.fillStyle = '#00B0FF';
             ctx.fillText("MERRY XMAS CHIP", 512, 130);
+            
+            // Lớp 2: Bóng trong xanh nhạt
+            ctx.shadowColor = "#80D8FF";
+            ctx.shadowBlur = 30;
+            ctx.fillStyle = '#40C4FF';
+            ctx.fillText("MERRY XMAS CHIP", 512, 130);
+            
+            // Lớp 3: Chữ chính màu xanh băng
+            ctx.shadowColor = "#18FFFF";
+            ctx.shadowBlur = 20;
+            ctx.fillStyle = '#E1F5FE';
+            ctx.fillText("MERRY XMAS CHIP", 512, 130);
+            
             const tex = new THREE.CanvasTexture(canvas);
-            const mat = new THREE.MeshBasicMaterial({ map: tex, transparent: true, blending: THREE.AdditiveBlending });
+            const mat = new THREE.MeshBasicMaterial({ 
+                map: tex, 
+                transparent: true, 
+                blending: THREE.AdditiveBlending,
+                opacity: 1.0
+            });
             titleMesh = new THREE.Mesh(new THREE.PlaneGeometry(60, 15), mat);
             titleMesh.position.set(0, 50, 0);
             scene.add(titleMesh);
@@ -338,20 +366,35 @@
             starMesh.position.set(0, CONFIG.treeHeight/2 + 2, 0);
             scene.add(starMesh);
 
-            // I LOVE YOU TEXT Vandiep
-            const loveCanvas = document.createElement('canvas');
-            loveCanvas.width = 1024; loveCanvas.height = 256;
-            const lCtx = loveCanvas.getContext('2d');
-            lCtx.font = 'bold 120px "Segoe UI", sans-serif';
-            lCtx.fillStyle = '#FF69B4'; lCtx.textAlign = 'center';
-            lCtx.shadowColor = "#FF1493"; lCtx.shadowBlur = 40; 
-            lCtx.fillText("YEU CHIP BEO", 512, 130);
-            const loveTex = new THREE.CanvasTexture(loveCanvas);
-            const loveMat = new THREE.MeshBasicMaterial({ map: loveTex, transparent: true, blending: THREE.AdditiveBlending });
-            loveMesh = new THREE.Mesh(new THREE.PlaneGeometry(70, 18), loveMat);
-            loveMesh.position.set(0, 0, 20);
-            loveMesh.visible = false;
-            scene.add(loveMesh);
+           // I LOVE YOU TEXT Vandiep - TÍM BĂNG GIÁ
+const loveCanvas = document.createElement('canvas');
+loveCanvas.width = 1024; loveCanvas.height = 256;
+const lCtx = loveCanvas.getContext('2d');
+lCtx.font = 'bold 120px "Segoe UI", sans-serif';
+lCtx.fillStyle = '#E6CCFF'; // Tím nhạt
+lCtx.textAlign = 'center';
+lCtx.shadowColor = "#CC99FF"; // Tím sáng
+lCtx.shadowBlur = 55;
+lCtx.fillText("YEU CHIP BEO", 512, 130);
+
+// Thêm viền sáng trắng tím
+lCtx.shadowColor = "#9966FF";
+lCtx.shadowBlur = 25;
+lCtx.strokeStyle = "rgba(230, 204, 255, 0.5)";
+lCtx.lineWidth = 2;
+lCtx.strokeText("YEU CHIP BEO", 512, 130);
+
+const loveTex = new THREE.CanvasTexture(loveCanvas);
+const loveMat = new THREE.MeshBasicMaterial({ 
+    map: loveTex, 
+    transparent: true, 
+    blending: THREE.AdditiveBlending,
+    opacity: 0.9 
+});
+loveMesh = new THREE.Mesh(new THREE.PlaneGeometry(70, 18), loveMat);
+loveMesh.position.set(0, 0, 20);
+loveMesh.visible = false;
+scene.add(loveMesh);
         }
 
         function updateParticleGroup(group, type, targetState, speed, handRotY, time) {
@@ -371,7 +414,7 @@
             }
             group.geometry.attributes.position.needsUpdate = true;
             
-            // 2. COLOR & SIZE Vandiep
+            // 2. COLOR & SIZE Vandiep - ĐÃ SỬA HIỆU ỨNG CHO CÂY TRẮNG
             const count = positions.length / 3;
             
             if (targetState === 'TREE') {
@@ -381,11 +424,11 @@
                     sizes[i] = baseSize;
                     let brightness = 1.0;
                     if(type === 'red') {
-                        // RED
-                        brightness = 0.5 + 0.5 * Math.sin(time * 3 + phases[i]);
+                        // WHITE WITH GENTLE PULSE
+                        brightness = 0.7 + 0.3 * Math.sin(time * 3 + phases[i]);
                     } else if(type === 'gold') {
-                        // YELLOW
-                        brightness = 0.8 + 0.4 * Math.sin(time * 10 + phases[i]);
+                        // WHITE WITH SUBTLE SPARKLE
+                        brightness = 0.9 + 0.2 * Math.sin(time * 8 + phases[i]);
                     }
                     colors[i*3]   = baseColor.r * brightness;
                     colors[i*3+1] = baseColor.g * brightness;
@@ -510,88 +553,86 @@
                 const h = canvas.clientHeight;
                 canvas.width  = Math.round(w * dpr);
                 canvas.height = Math.round(h * dpr);
-                ctx.setTransform(dpr, 0, 0, dpr, 0, 0); // vẽ theo px CSS
+                ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
                 }
                 resizePreviewCanvas();
                 window.addEventListener('resize', resizePreviewCanvas);
 
-
-            
             const hands = new Hands({locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`});
             hands.setOptions({ maxNumHands: 2, modelComplexity: 1, minDetectionConfidence: 0.5, minTrackingConfidence: 0.5 });
 
-           hands.onResults((results) => {
-            // Vẽ camera preview vào khung đỏ
-            ctx.clearRect(0, 0, canvas.clientWidth, canvas.clientHeight);
-            ctx.drawImage(results.image, 0, 0, canvas.clientWidth, canvas.clientHeight);
+            hands.onResults((results) => {
+                // Vẽ camera preview vào khung đỏ
+                ctx.clearRect(0, 0, canvas.clientWidth, canvas.clientHeight);
+                ctx.drawImage(results.image, 0, 0, canvas.clientWidth, canvas.clientHeight);
 
-            // Nếu không có tay -> về TREE
-            if (!results.multiHandLandmarks || results.multiHandLandmarks.length === 0) {
-                state = 'TREE';
-                return;
-            }
-
-            // Vẽ "xương" bàn tay
-            for (const landmarks of results.multiHandLandmarks) {
-                drawConnectors(ctx, landmarks, HAND_CONNECTIONS, { lineWidth: 2 });
-                drawLandmarks(ctx, landmarks, { radius: 2 });
-            }
-
-            // --- Gesture logic ---
-            // 2 tay chụm -> HEART
-            if (results.multiHandLandmarks.length === 2) {
-                const h1 = results.multiHandLandmarks[0];
-                const h2 = results.multiHandLandmarks[1];
-                const distIndex = Math.hypot(h1[8].x - h2[8].x, h1[8].y - h2[8].y);
-                const distThumb = Math.hypot(h1[4].x - h2[4].x, h1[4].y - h2[4].y);
-                if (distIndex < 0.15 && distThumb < 0.15) {
-                state = 'HEART';
-                return;
+                // Nếu không có tay -> về TREE
+                if (!results.multiHandLandmarks || results.multiHandLandmarks.length === 0) {
+                    state = 'TREE';
+                    return;
                 }
-            }
 
-            // --- 1 tay: điều khiển xoay (handX) + trạng thái ---
-            const lm = results.multiHandLandmarks[0];
+                // Vẽ "xương" bàn tay
+                for (const landmarks of results.multiHandLandmarks) {
+                    drawConnectors(ctx, landmarks, HAND_CONNECTIONS, { lineWidth: 2 });
+                    drawLandmarks(ctx, landmarks, { radius: 2 });
+                }
 
-            // Lấy X của ngón trỏ (8) hoặc khớp giữa (9). Ngón trỏ dễ “lướt” hơn:
-            let x = lm[8].x; // 0..1 theo khung camera
+                // --- Gesture logic ---
+                // 2 tay chụm -> HEART
+                if (results.multiHandLandmarks.length === 2) {
+                    const h1 = results.multiHandLandmarks[0];
+                    const h2 = results.multiHandLandmarks[1];
+                    const distIndex = Math.hypot(h1[8].x - h2[8].x, h1[8].y - h2[8].y);
+                    const distThumb = Math.hypot(h1[4].x - h2[4].x, h1[4].y - h2[4].y);
+                    if (distIndex < 0.15 && distThumb < 0.15) {
+                    state = 'HEART';
+                    return;
+                    }
+                }
 
-            // Vì preview đang scaleX(-1) (m bị lật gương ở CSS), nên đảo x cho đúng chiều điều khiển:
-            x = 1 - x;
+                // --- 1 tay: điều khiển xoay (handX) + trạng thái ---
+                const lm = results.multiHandLandmarks[0];
 
-            // ✅ GAIN để lướt ăn đủ 5 vùng mà không phải đưa tay ra rìa camera
-            const gainX = 2.0;          // thử 1.6 -> 2.2 tùy độ “nhạy” m muốn
-            x = (x - 0.5) * gainX + 0.5;
+                // Lấy X của ngón trỏ (8) hoặc khớp giữa (9). Ngón trỏ dễ "lướt" hơn:
+                let x = lm[8].x; // 0..1 theo khung camera
 
-            // Clamp về 0..1
-            x = Math.max(0, Math.min(1, x));
+                // Vì preview đang scaleX(-1) (m bị lật gương ở CSS), nên đảo x cho đúng chiều điều khiển:
+                x = 1 - x;
 
-            // Gán cho hệ thống xoay (m đang dùng handX để xoay explode)
-            handX = x;
+                // ✅ GAIN để lướt ăn đủ 5 vùng mà không phải đưa tay ra rìa camera
+                const gainX = 1.9;          // thử 1.6 -> 2.2 tùy độ "nhạy" m muốn
+                x = (x - 0.5) * gainX + 0.5;
 
-            // Tính các gesture khác giữ nguyên của m
-            const tips = [8, 12, 16, 20];
-            const wrist = lm[0];
-            let openDist = 0;
-            tips.forEach(i => openDist += Math.hypot(lm[i].x - wrist.x, lm[i].y - wrist.y));
-            const avgDist = openDist / 4;
-            const pinchDist = Math.hypot(lm[4].x - lm[8].x, lm[4].y - lm[8].y);
+                // Clamp về 0..1
+                x = Math.max(0, Math.min(1, x));
 
-            if (avgDist < 0.25) {
-                state = 'TREE';
-            } else if (pinchDist < 0.05) {
-                state = 'PHOTO';
-            } else {
-                state = 'EXPLODE';
-            }
+                // Gán cho hệ thống xoay (m đang dùng handX để xoay explode)
+                handX = x;
+
+                // Tính các gesture khác giữ nguyên của m
+                const tips = [8, 12, 16, 20];
+                const wrist = lm[0];
+                let openDist = 0;
+                tips.forEach(i => openDist += Math.hypot(lm[i].x - wrist.x, lm[i].y - wrist.y));
+                const avgDist = openDist / 4;
+                const pinchDist = Math.hypot(lm[4].x - lm[8].x, lm[4].y - lm[8].y);
+
+                if (avgDist < 0.25) {
+                    state = 'TREE';
+                } else if (pinchDist < 0.05) {
+                    state = 'PHOTO';
+                } else {
+                    state = 'EXPLODE';
+                }
             });
 
             const cameraUtils = new Camera(video, {
-            onFrame: async () => {
-                await hands.send({ image: video });
-            },
-            width: 640,
-            height: 480
+                onFrame: async () => {
+                    await hands.send({ image: video });
+                },
+                width: 640,
+                height: 480
             });
             cameraUtils.start();
         }
