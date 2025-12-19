@@ -40,19 +40,20 @@
         @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
 
         /* Camera Preview Vandiep */
-        #camera-preview {
-  position: absolute;
-  top: 15px;
-  right: 15px;
-  width: 120px;
-  height: 90px;
-  border: 2px solid rgba(255,0,0,0.5);
-  border-radius: 8px;
-  opacity: 0.6;
-  transform: scaleX(-1);
-  z-index: 10;
-}
+            #camera-preview {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        width: 120px;
+        height: 90px;
+        border: 2px solid rgba(255,0,0,0.5);
+        border-radius: 8px;
+        opacity: 0.6;
+        transform: scaleX(-1);
+        z-index: 10;
+        }
 
+        
         /* Vandiep */
         #copyright {
             position: absolute;
@@ -87,7 +88,7 @@
     <div id="canvas-container"></div>
     <video class="input_video" style="display:none"></video>
     <canvas id="camera-preview"></canvas>
-    
+
     <script>
         // ==========================================
         // 1. RESOURCES CONFIG Vandiep
@@ -328,7 +329,7 @@
             lCtx.font = 'bold 120px "Segoe UI", sans-serif';
             lCtx.fillStyle = '#FF69B4'; lCtx.textAlign = 'center';
             lCtx.shadowColor = "#FF1493"; lCtx.shadowBlur = 40; 
-            lCtx.fillText("YEU CHIP BEOO", 512, 130);
+            lCtx.fillText("YEU CHIP BEO", 512, 130);
             const loveTex = new THREE.CanvasTexture(loveCanvas);
             const loveMat = new THREE.MeshBasicMaterial({ map: loveTex, transparent: true, blending: THREE.AdditiveBlending });
             loveMesh = new THREE.Mesh(new THREE.PlaneGeometry(70, 18), loveMat);
@@ -487,12 +488,23 @@
             const video = document.getElementsByClassName('input_video')[0];
             const canvas = document.getElementById('camera-preview');
             const ctx = canvas.getContext('2d');
+            canvas.width = 120;
+            canvas.height = 90;
+
             
             const hands = new Hands({locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`});
             hands.setOptions({ maxNumHands: 2, modelComplexity: 1, minDetectionConfidence: 0.5, minTrackingConfidence: 0.5 });
 
             hands.onResults(results => {
-                ctx.clearRect(0,0,100,75); ctx.drawImage(results.image, 0, 0, 100, 75);
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.drawImage(
+                results.image,
+                0,
+                0,
+                canvas.width,
+                canvas.height
+                );
+
 
                 // --- Hand Logic  ---
                 if (results.multiHandLandmarks.length === 2) {
