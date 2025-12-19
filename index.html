@@ -62,71 +62,27 @@
 
         #error-log { display: none; position: absolute; top: 0; left: 0; color: red; background: rgba(0,0,0,0.8); z-index: 999; padding: 10px; }
     </style>
-    <style>
-  html, body {
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    background: black;
-  }
-
-
-    </style>
-    <style>
-    html, body {
-        margin: 0;
-        padding: 0;
-        width: 100%;
-        height: 100%;
-        overflow: hidden;
-        background: black;
-    }
-
-
-    </style>
-
 </head>
 <body>
- 
-
-
     <div id="error-log"></div>
     
     <!-- UI Vandiep -->
     <div id="ui-layer">
         <!-- Vandiep -->
         <div class="guide">
-           Tree
+       
         </div>
-        <button id="btnStart" onclick="startSystem()">START MAGIC</button>
+        <button id="btnStart" onclick="startSystem()">chip nhan vao di</button>
     </div>
 
     <!-- Vandiep -->
-    <div id="copyright"></div>
+    <div id="copyright">© by vandiep</div>
 
     <div id="canvas-container"></div>
     <video class="input_video" style="display:none"></video>
     <canvas id="camera-preview"></canvas>
 
     <script>
-       
-        const video = document.getElementById('webcam');
-
-        navigator.mediaDevices.getUserMedia({
-            video: {
-            width: { ideal: 1280 },
-            height: { ideal: 720 }
-            },
-            audio: false
-        }).then(stream => {
-            video.srcObject = stream;
-        }).catch(err => {
-            console.error(err);
-        });
-
-
         // ==========================================
         // 1. RESOURCES CONFIG Vandiep
         // ==========================================
@@ -334,7 +290,7 @@
             ctx.font = 'bold italic 90px "Times New Roman"';
             ctx.fillStyle = '#FFD700'; ctx.textAlign = 'center';
             ctx.shadowColor = "#FF0000"; ctx.shadowBlur = 40; 
-            ctx.fillText("MERRY CHRISTMAS", 512, 130);
+            ctx.fillText("MERRY XMAS CHIP", 512, 130);
             const tex = new THREE.CanvasTexture(canvas);
             const mat = new THREE.MeshBasicMaterial({ map: tex, transparent: true, blending: THREE.AdditiveBlending });
             titleMesh = new THREE.Mesh(new THREE.PlaneGeometry(60, 15), mat);
@@ -572,6 +528,5 @@
             if(camera) { camera.aspect = window.innerWidth/window.innerHeight; camera.updateProjectionMatrix(); renderer.setSize(window.innerWidth, window.innerHeight); }
         });
     </script>
-    
 </body>
 </html>
