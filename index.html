@@ -16,14 +16,12 @@
     <style>
         body { margin: 0; overflow: hidden; background-color: #d5eaff; font-family: 'Segoe UI', sans-serif; }
         #canvas-container { width: 100%; height: 100vh; display: block; }
-        
-        /* UI Center Vandiep */
+      
         #ui-layer {
             position: absolute; bottom: 30px; width: 100%;
             text-align: center; pointer-events: none; z-index: 100;
         }
-        
-        /* Guide text Vandiep */
+   
         .guide { 
             color: rgba(255, 255, 255, 0.6); 
             font-size: 13px; 
@@ -42,15 +40,13 @@
         }
         @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
 
-        /* Camera Preview Vandiep */
-        /* Camera Preview Vandiep - BĂNG GIÁ */
 #camera-box{
     position: absolute;
     top: 15px;
     right: 15px;
     width: 120px;
     height: 90px;
-    border: 2px solid rgba(200, 240, 255, 0.9); /* Xanh băng nhạt */
+    border: 2px solid rgba(200, 240, 255, 0.9); 
     border-radius: 12px;
     overflow: hidden;
     opacity: 0.85;
@@ -71,7 +67,7 @@
     height: 100%;
     display: block;
 }
-        /* Vandiep */
+       
         #copyright {
             position: absolute;
             bottom: 10px;
@@ -90,16 +86,15 @@
 <body>
     <div id="error-log"></div>
     
-    <!-- UI Vandiep -->
+
     <div id="ui-layer">
-        <!-- Vandiep -->
+   
         <div class="guide">
        
         </div>
         <button id="btnStart" onclick="startSystem()">chip click vào i</button>
     </div>
 
-    <!-- Vandiep -->
     <div id="copyright">mkhang cua chip beo iu</div>
 
     <div id="canvas-container"></div>
@@ -109,9 +104,7 @@
     </div>
 
     <script>
-        // ==========================================
-        // 1. RESOURCES CONFIG Vandiep
-        // ==========================================
+
         const MUSIC_URL = "./audio.mp3";
         let bgMusic = new Audio(MUSIC_URL);
         bgMusic.loop = true; bgMusic.volume = 1.0;
@@ -159,7 +152,7 @@
         };
 
         // ==========================================
-        // 2. SYSTEM CONFIG Vandiep
+      
         // ==========================================
         const CONFIG = {
             goldCount: 2000,
@@ -181,7 +174,7 @@
         let handX = 0.5;
 
         // ==========================================
-        // 3. THREE.JS SYSTEM Vandiep
+      
         // ==========================================
         function init3D() {
             const container = document.getElementById('canvas-container');
@@ -214,7 +207,7 @@
             const phases = []; 
             
             for(let i=0; i<count; i++) {
-                // --- TREE Vandiep ---
+              
                 const h = Math.random() * CONFIG.treeHeight; 
                 const y = h - CONFIG.treeHeight / 2;
                 let radiusRatio = (type === 'gold') ? Math.sqrt(Math.random()) : 0.9 + Math.random()*0.1;
@@ -223,7 +216,6 @@
                 const theta = Math.random() * Math.PI * 2;
                 pTreeTargets.push(r * Math.cos(theta), y, r * Math.sin(theta));
 
-                // --- EXPLODE Vandiep ---
                 const u = Math.random();
                 const v = Math.random();
                 const phi = Math.acos(2 * v - 1);
@@ -232,12 +224,11 @@
                 const rad = CONFIG.explodeRadius * Math.cbrt(Math.random()) * radMult;
                 pExplodeTargets.push(rad * Math.sin(phi) * Math.cos(lam), rad * Math.sin(phi) * Math.sin(lam), rad * Math.cos(phi));
 
-                // --- SOFT HEART Vandiep ---
                 const tHeart = Math.random() * Math.PI * 2;
                 let hx = 16 * Math.pow(Math.sin(tHeart), 3);
                 let hy = 13 * Math.cos(tHeart) - 5 * Math.cos(2*tHeart) - 2 * Math.cos(3*tHeart) - Math.cos(4*tHeart);
                 
-                const rFill = Math.pow(Math.random(), 0.3); // Soft fill Vandiep
+                const rFill = Math.pow(Math.random(), 0.3); 
                 hx *= rFill; hy *= rFill;
                 let hz = (Math.random() - 0.5) * 8 * rFill; 
                 
@@ -249,7 +240,7 @@
                 const scaleH = 2.2;
                 pHeartTargets.push(hx * scaleH, hy * scaleH + 5, hz); 
 
-                // --- INIT Vandiep ---
+              
                 pPositions.push(pTreeTargets[i*3], pTreeTargets[i*3+1], pTreeTargets[i*3+2]);
                 sizes.push(size);
                 phases.push(Math.random() * Math.PI * 2);
@@ -259,7 +250,7 @@
             geo.setAttribute('position', new THREE.Float32BufferAttribute(pPositions, 3));
             geo.setAttribute('size', new THREE.Float32BufferAttribute(sizes, 1));
             
-            // Init colors Vandiep - ĐÃ SỬA THÀNH MÀU TRẮNG
+      
             const colors = new Float32Array(count * 3);
             const baseColor = new THREE.Color();
             if(type === 'gold') baseColor.setHex(0xFFFFFF); // VÀNG -> TRẮNG
@@ -311,7 +302,6 @@
         }
 
         function createDecorations() {
-                // MERRY CHRISTMAS Vandiep - XANH BĂNG LẤP LÁNH
             const canvas = document.createElement('canvas');
             canvas.width = 1024; canvas.height = 256;
             const ctx = canvas.getContext('2d');
@@ -348,7 +338,7 @@
             titleMesh.position.set(0, 50, 0);
             scene.add(titleMesh);
 
-            // STAR Vandiep
+        
             const starCanvas = document.createElement('canvas');
             starCanvas.width = 128; starCanvas.height = 128;
             const sCtx = starCanvas.getContext('2d');
@@ -366,7 +356,6 @@
             starMesh.position.set(0, CONFIG.treeHeight/2 + 2, 0);
             scene.add(starMesh);
 
-           // I LOVE YOU TEXT Vandiep - TÍM BĂNG GIÁ
 const loveCanvas = document.createElement('canvas');
 loveCanvas.width = 1024; loveCanvas.height = 256;
 const lCtx = loveCanvas.getContext('2d');
@@ -408,13 +397,12 @@ scene.add(loveMesh);
             const targetKey = (targetState === 'TREE') ? 'tree' : (targetState === 'HEART' ? 'heart' : 'explode');
             const targets = group.geometry.userData[(targetState === 'PHOTO') ? 'explode' : targetKey];
 
-            // 1. Vandiep
+   
             for(let i=0; i<positions.length; i++) {
                 positions[i] += (targets[i] - positions[i]) * speed;
             }
             group.geometry.attributes.position.needsUpdate = true;
-            
-            // 2. COLOR & SIZE Vandiep - ĐÃ SỬA HIỆU ỨNG CHO CÂY TRẮNG
+    
             const count = positions.length / 3;
             
             if (targetState === 'TREE') {
@@ -440,9 +428,7 @@ scene.add(loveMesh);
             } else if (targetState === 'HEART') {
                 group.rotation.y = 0;
                 const beatScale = 1 + Math.abs(Math.sin(time * 3)) * 0.15;
-                group.scale.set(beatScale, beatScale, beatScale);
-
-                // Vandiep
+                group.scale.set(beatScale, beatScale, beatScale);              
                 for(let i=0; i<count; i++) {
                     colors[i*3] = baseColor.r; colors[i*3+1] = baseColor.g; colors[i*3+2] = baseColor.b;
                     if (i % 3 === 0) sizes[i] = baseSize;
@@ -601,7 +587,7 @@ scene.add(loveMesh);
                 x = 1 - x;
 
                 // ✅ GAIN để lướt ăn đủ 5 vùng mà không phải đưa tay ra rìa camera
-                const gainX = 1.9;          // thử 1.6 -> 2.2 tùy độ "nhạy" m muốn
+                const gainX = 2.1;          // thử 1.6 -> 2.2 tùy độ "nhạy" m muốn
                 x = (x - 0.5) * gainX + 0.5;
 
                 // Clamp về 0..1
